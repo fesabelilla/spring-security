@@ -8,7 +8,7 @@ public class HomeController {
 
     @GetMapping("/home")
     public String test(){
-
+        System.out.println("Test Security");
         return "home";
     }
 }
