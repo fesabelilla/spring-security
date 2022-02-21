@@ -17,7 +17,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         auth.inMemoryAuthentication()
                 .withUser("zahid")
                 .password("12345678")
-                .roles("USER");
+                .roles("USER")
+                .and()
+                .withUser("fesabelilla")
+                .password("12345678")
+                .roles("ADMIN");
     }
 
     @Bean
