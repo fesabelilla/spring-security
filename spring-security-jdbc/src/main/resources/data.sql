@@ -1,9 +1,9 @@
-insert into users (username, password, enabled)
+insert into new_users (username, password, enabled)
     values ('user',
     'pass',
     true);
 
-insert into users (username, password, enabled)
+insert into new_users (username, password, enabled)
     values ('admin',
     'pass',
     true);
