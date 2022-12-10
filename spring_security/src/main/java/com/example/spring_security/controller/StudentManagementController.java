@@ -2,7 +2,6 @@ package com.example.spring_security.controller;
 
 import com.example.spring_security.model.Student;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Arrays;
 import java.util.List;
 

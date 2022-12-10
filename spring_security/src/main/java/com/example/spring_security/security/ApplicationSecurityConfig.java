@@ -12,7 +12,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
+import static com.example.spring_security.security.ApplicationUserPermission.COURSE_WRITE;
 import static com.example.spring_security.security.ApplicationUserRole.*;
+import static org.springframework.http.HttpMethod.*;
 
 @Configuration
 @EnableWebSecurity
@@ -32,6 +34,10 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
                 .antMatchers("/api/**").hasRole(STUDENT.name())
+                .antMatchers(POST, "/management/api/**").hasAuthority(COURSE_WRITE.getPermission())
+                .antMatchers(PUT, "/management/api/**").hasAuthority(COURSE_WRITE.getPermission())
+                .antMatchers(DELETE, "/management/api/**").hasAuthority(COURSE_WRITE.getPermission())
+                .antMatchers(GET,"/management/api/**").hasAnyRole(ADMIN.name(), ADMINTRAINNE.name())
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -42,22 +48,29 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     @Override
     protected UserDetailsService userDetailsService() {
+
+        // zahid has no authorities to read write
         UserDetails zahidUser = User.builder()
                 .username("zahid")
                 .password(passwordEncoder.encode("12345"))
-                .roles(STUDENT.name()) //ROLE_STUDENT
+//                .roles(STUDENT.name()) //ROLE_STUDENT
+                .authorities(STUDENT.getGrantedAuthorities())
                 .build();
 
+        // hasan has authorities to read, write, put and delete
         UserDetails hasanUser = User.builder()
                 .username("hasan")
                 .password(passwordEncoder.encode("12345"))
-                .roles(ADMIN.name()) //ROLE_ADMIN
+//                .roles(ADMIN.name()) //ROLE_ADMIN
+                .authorities(ADMIN.getGrantedAuthorities())
                 .build();
 
+        // tom has only authorities to read
         UserDetails tomUser = User.builder()
                 .username("tom")
                 .password(passwordEncoder.encode("12345"))
-                .roles(ADMINTRAINNE.name()) //ROLE_ADMINTRAINNE
+//                .roles(ADMINTRAINNE.name()) //ROLE_ADMINTRAINNE
+                .authorities(ADMINTRAINNE.getGrantedAuthorities())
                 .build();
 
         return new InMemoryUserDetailsManager(

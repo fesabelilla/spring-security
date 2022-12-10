@@ -28,5 +28,4 @@ public class StudentController {
                 .orElseThrow(() -> new NoSuchElementException("No student found. Student Id : "+ studentId));
 
     }
-
 }
