@@ -3,6 +3,7 @@ package com.example.spring_security.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -12,12 +13,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
-import static com.example.spring_security.security.ApplicationUserPermission.COURSE_WRITE;
 import static com.example.spring_security.security.ApplicationUserRole.*;
-import static org.springframework.http.HttpMethod.*;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
@@ -34,10 +34,10 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
                 .antMatchers("/api/**").hasRole(STUDENT.name())
-                .antMatchers(POST, "/management/api/**").hasAuthority(COURSE_WRITE.getPermission())
-                .antMatchers(PUT, "/management/api/**").hasAuthority(COURSE_WRITE.getPermission())
-                .antMatchers(DELETE, "/management/api/**").hasAuthority(COURSE_WRITE.getPermission())
-                .antMatchers(GET,"/management/api/**").hasAnyRole(ADMIN.name(), ADMINTRAINNE.name())
+//                .antMatchers(POST, "/management/api/**").hasAuthority(COURSE_WRITE.getPermission())
+//                .antMatchers(PUT, "/management/api/**").hasAuthority(COURSE_WRITE.getPermission())
+//                .antMatchers(DELETE, "/management/api/**").hasAuthority(COURSE_WRITE.getPermission())
+//                .antMatchers(GET,"/management/api/**").hasAnyRole(ADMIN.name(), ADMINTRAINNE.name())
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -58,8 +58,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .build();
 
         // hasan has authorities to read, write, put and delete
-        UserDetails hasanUser = User.builder()
-                .username("hasan")
+        UserDetails lindaUser = User.builder()
+                .username("linda")
                 .password(passwordEncoder.encode("12345"))
 //                .roles(ADMIN.name()) //ROLE_ADMIN
                 .authorities(ADMIN.getGrantedAuthorities())
@@ -70,12 +70,12 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .username("tom")
                 .password(passwordEncoder.encode("12345"))
 //                .roles(ADMINTRAINNE.name()) //ROLE_ADMINTRAINNE
-                .authorities(ADMINTRAINNE.getGrantedAuthorities())
+                .authorities(ADMINTRAINEE.getGrantedAuthorities())
                 .build();
 
         return new InMemoryUserDetailsManager(
                 zahidUser,
-                hasanUser,
+                lindaUser,
                 tomUser
         );
     }
